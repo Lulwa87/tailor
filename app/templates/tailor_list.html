@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+<div class="content">
+		<div class="container">
+			<div class="main">
+					<div class="col-md-10 main1">
+							<ul>
+							{% for tailor in tailors %}
+								<li>
+									
+									<a href="/tailor_detail/{{ tailor.pk }}/"><h1>{{ tailor.name }}</h1></a>
+									
+										 
+								</li>
+								<hr>
+							{% endfor %}
+							
+							</ul>
+					</div>
+			
+					<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>			
+			
+
+{% endblock %}

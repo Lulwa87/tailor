@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+<div class="content">
+		<div class="container">
+			<div class="main">
+					<div class="col-md-10 main1">
+							<ul>
+							{% for model in models %}
+								<li>
+									
+									<a href="/model_detail/{{ model.pk }}/"><h1>{{ model.name }}</h1></a>
+									{% if model.image %}
+									<img src="{{ model.image.url }}"><br>
+									{% endif %}
+										 
+								</li>
+								<hr>
+							{% endfor %}
+							
+							</ul>
+					</div>
+			
+					<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>			
+			
+
+{% endblock %}
