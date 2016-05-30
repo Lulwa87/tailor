@@ -1,9 +1,9 @@
 from django.contrib import admin
-from app.models import ModelTag, Model, MaterialTag, Material, Tailor, FabricTag, Fabric, Measurment, CustomUser
+from app.models import *
 
 
-
-admin.site.register(DesignModel)
+admin.site.register(ProductDesign)
+admin.site.register(ReadyToWear)
 admin.site.register(ModelTag)
 admin.site.register(CustomUser)
 admin.site.register(Material)

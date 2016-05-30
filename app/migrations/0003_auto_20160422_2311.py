@@ -13,12 +13,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='measurment',
-            name='ankle',
-            field=models.FloatField(default=datetime.datetime(2016, 4, 22, 23, 10, 24, 197039, tzinfo=utc)),
-            preserve_default=False,
-        ),
+        # migrations.AlterField(
+        #     model_name='measurment',
+        #     name='ankle',
+        #     field=models.FloatField(default=datetime.datetime(2016, 4, 22, 23, 10, 24, 197039, tzinfo=utc)),
+        #     preserve_default=False,
+        # ),
         migrations.AlterField(
             model_name='measurment',
             name='arm_hole',

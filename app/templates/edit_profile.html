@@ -1,31 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'profile_page.html' %}
+
+
+{% load crispy_forms_tags %}
+
 {% block body %}
 
-
-
-<div class="content">
-		<div class="container">
-			<div class="main">
-					<div class="col-md-10 main1">
-						<h1>Edit Profile</h1>
-						<form action='/edit_profile/' method='POST'>
-
-							{% csrf_token %}
-							{{ form.as_p}}
-
-							<div class="loadmore1" style="float:left;">
-									<a class="load">
-										<input type='submit' value='Save' style="padding: 0; border: none; background: none;"/>
-									</a>
-								
-							</div>
-						</form>
-					</div>
-			
-					<div class="clearfix"> </div>
-			</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			{% crispy form %}
 		</div>
 	</div>
+</div>
 
 
 

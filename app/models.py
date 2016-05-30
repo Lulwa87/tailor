@@ -1,19 +1,40 @@
 from django.db import models
 from django.utils import timezone
 from django.core.mail import send_mail 
+from django.utils.http import urlquote  
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from app.widget import ColorPickerWidget
+# from app.widget import ColorPickerWidget
+from django import forms
+
+
+# class ColorField(models.CharField):
+# 	def __init(self, *args, **kwargs):
+# 		kwargs['max_length'] = 10
+# 		super(ColorField, self).__init__(*args, **kwargs)
+
+# 	def formField(self, **kwargs, *args):
+# 		kwargs['widget'] = ColorPickerWidget
+# 		return super(ColorField, self).__init__(*args, **kwargs)
+
+class ShippingAddress(models.Model):
+	customer = models.ForeignKey('app.CustomUser')
+	city = models.CharField(max_length=50, blank=False)
+	block = models.IntegerField(blank=False)
+	street = models.CharField(max_length=255, blank=False)
+	avenue = models.CharField(max_length=255, blank=True)
+	house_number = models.CharField(max_length=50, blank=False)
+	mobile = models.CharField(max_length=50, blank=False)
+	extra_instructions = models.CharField(max_length=50, blank=True)
 
 
 
-class ColorField(models.CharField):
-	def __init(self, *args, **kwargs):
-		kwargs['max_length'] = 10
-		super(ColorField, self).__init__(*args, **kwargs)
+# class ShoppingCart(models.Model):
+# 	customer = models.ForeignKey('app.CustomUser')
+# 	order_number = models.CharField(max_length=255, blank=False)
+# 	readyproduct = models.ForeignKey('app.ReadyToWear')
+# 	designproduct = models.ForeignKey('app.ProductDesign')
 
-	def formField(self, **kwargs, *args):
-		kwargs['widget'] = ColorPickerWidget
-		return super(ColorField, self).__init__(*args, **kwargs)
+
 
 class ModelTag(models.Model):
 	name = models.CharField(max_length=200, null=True, blank=True)
@@ -22,17 +43,36 @@ class ModelTag(models.Model):
 	def __unicode__(self):
 		return '%s' % self.name
 
-
-class DesignModel(models.Model):
-	model_id = models.IntegerField(null=True, blank=True)
+		
+class ReadyToWear(models.Model):
+	product_id = models.IntegerField(null=True, blank=True)
 	name = models.CharField(max_length=200, null=True, blank=True)
 	color = models.CharField(max_length=200, null=True, blank=True)
 	image = models.ImageField(null=True, blank=True)
+	category = models.CharField(max_length=255, null=True, blank=True)
+	description = models.CharField(max_length=225, null=True, blank=True)
+	size = models.CharField(max_length=225, null=True, blank=True)
+	fabric_tag = models.ManyToManyField('app.FabricTag', null=True, blank=True)
+	quantity = models.IntegerField(null=True, blank=True)
+	price = models.FloatField(null=True, blank=True)
+	brand = models.CharField(max_length=255, null=True, blank=True)
+	def __unicode__(self):
+		return '%s' % self.name
+
+class ProductDesign(models.Model):
+	product_id = models.IntegerField(null=True, blank=True)
+	name = models.CharField(max_length=200, null=True, blank=True)
+	color = models.CharField(max_length=200, null=True, blank=True)
+	image = models.ImageField(null=True, blank=True)
+	# category = 
 	description = models.CharField(max_length=225, null=True, blank=True)
 	size = models.CharField(max_length=225, null=True, blank=True)
 	model_tag = models.ManyToManyField('app.ModelTag', null=True, blank=True)
 	material_tag = models.ManyToManyField('app.MaterialTag', null=True, blank=True)
 	fabric_tag = models.ManyToManyField('app.FabricTag', null=True, blank=True)
+	quantity = models.IntegerField(null=True, blank=True)
+	price = models.FloatField(null=True, blank=True)
+	brand = models.CharField(max_length=255, null=True, blank=True)
 
 	def __unicode__(self):
 		return '%s' % self.name
@@ -60,7 +100,7 @@ class Tailor(models.Model):
 	name = models.CharField(max_length=200, null=True, blank=True)
 	experience = models.CharField(max_length=200, null=True, blank=True)
 	specialest = models.CharField(max_length=200, null=True, blank=True)
-	model = models.ForeignKey('app.Model', null=True, blank=True)
+	model = models.ForeignKey('app.ProductDesign', null=True, blank=True)
 
 	def __unicode__(self):
 		return '%s' % self.name
@@ -92,20 +132,20 @@ class Fabric(models.Model):
 
 class Measurment(models.Model):
 	customer = models.ForeignKey('app.CustomUser')
-	demo = models.FileField(upload_to = 'demos')
-	neck = models.FloatField(null=True, blank=True)
-	shoulder = models.FloatField(null=True, blank=True)
-	arm_hole = models.FloatField(null=True, blank=True)
-	upper_arm = models.FloatField(null=True, blank=True)
-	bust = models.FloatField(null=True, blank=True)
-	length = models.FloatField(null=True, blank=True)
-	sleeve = models.FloatField(null=True, blank=True)
-	waist = models.FloatField(null=True, blank=True)
-	hips = models.FloatField(null=True, blank=True)
-	thighs = models.FloatField(null=True, blank=True)
-	bottom_length = models.FloatField(null=True, blank=True)
-	ankle = models.FloatField(null=True, blank=True)
-	font_color = ColorField(blank=True)
+	demo = models.FileField(upload_to = 'demos', null=True, blank=True)
+	neck = models.FloatField(null=True, blank=True, default=0.00)
+	shoulder = models.FloatField(null=True, blank=True, default=0.00)
+	arm_hole = models.FloatField(null=True, blank=True, default=0.00)
+	upper_arm = models.FloatField(null=True, blank=True, default=0.00)
+	bust = models.FloatField(null=True, blank=True, default=0.00)
+	length = models.FloatField(null=True, blank=True, default=0.00)
+	sleeve = models.FloatField(null=True, blank=True, default=0.00)
+	waist = models.FloatField(null=True, blank=True, default=0.00)
+	hips = models.FloatField(null=True, blank=True, default=0.00)
+	thighs = models.FloatField(null=True, blank=True, default=0.00)
+	bottom_length = models.FloatField(null=True, blank=True, default=0.00)
+	ankle = models.FloatField(null=True, blank=True, default=0.00)
+	# font_color = ColorField(blank=True)
 
 	def __unicode__(self):
 		return '%s' % self.customer
